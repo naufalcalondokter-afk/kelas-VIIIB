@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direktori Kelas</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap');
+
+  :root {
+    --navy: #1E3A5F;
+    --sky: #3B82F6;
+    --sky-light: #DCEAFB;
+    --bg: #EAF4FB;
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image: radial-gradient(circle, #1E3A5F14 1px, transparent 1px);
+    background-size: 20px 20px;
+    font-family: 'Nunito', sans-serif;
+    color: var(--navy);
+  }
+
+  header {
+    position: relative;
+    overflow: hidden;
+    background: var(--navy);
+    text-align: center;
+    padding: 48px 24px 40px;
+  }
+  header::before, header::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+  }
+  header::before { width: 140px; height: 140px; top: -40px; left: -30px; background: var(--sky); opacity: 0.25; }
+  header::after { width: 180px; height: 180px; bottom: -60px; right: -40px; background: #60A5FA; opacity: 0.2; }
+
+  .eyebrow { position: relative; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; color: #93C5FD; font-weight: 700; margin-bottom: 10px; }
+  header h1 { position: relative; font-family: 'Poppins', sans-serif; color: var(--white); font-size: 30px; margin: 0 0 8px; }
+  header p.sub { position: relative; color: #DCEAFBcc; font-size: 13px; margin: 0; }
+
+  .wave { display: block; width: 100%; height: 32px; margin-top: -2px; }
+
+  .info-strip {
+    max-width: 900px; margin: -28px auto 0; position: relative; z-index: 2;
+    background: var(--white); border-radius: 16px; box-shadow: 0 8px 24px rgba(30,58,95,0.12);
+    display: grid; grid-template-columns: repeat(2, 1fr); overflow: hidden;
+  }
+  @media (min-width: 640px) { .info-strip { grid-template-columns: repeat(4, 1fr); } }
+  .info-item { padding: 16px 12px; text-align: center; border-right: 1px solid #EAF4FB; }
+  .info-item:last-child { border-right: none; }
+  .info-item .icon { font-size: 18px; margin-bottom: 4px; }
+  .info-item .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #1E3A5F88; font-weight: 700; margin: 0 0 2px; }
+  .info-item .value { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy); margin: 0; }
+
+  .toolbar { max-width: 900px; margin: 24px auto 0; padding: 0 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .search-wrap { position: relative; flex: 1; min-width: 180px; }
+  .search-wrap input {
+    width: 100%; padding: 10px 14px 10px 34px; border-radius: 10px; border: 1px solid #C7DFF6;
+    background: var(--white); font-family: 'Nunito', sans-serif; font-size: 13px; color: var(--navy); outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--sky); }
+  .search-wrap .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: 0.5; }
+
+  .btn {
+    background: var(--sky); color: white; border: none; border-radius: 10px; padding: 10px 14px;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; white-space: nowrap;
+  }
+  .btn.alt { background: #60A5FA; }
+  .btn:active { filter: brightness(0.9); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  .section-title {
+    font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.05em; margin: 8px 0 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ""; flex: 1; height: 1px; background: #C7DFF6; }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (min-width: 560px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 800px) { .grid { grid-template-columns: repeat(5, 1fr); } }
+
+  .card {
+    background: var(--white); border-radius: 12px; padding: 16px 10px 14px; text-align: center;
+    box-shadow: 0 2px 8px rgba(30,58,95,0.08); transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(30,58,95,0.15); }
+  .card.hidden { display: none; }
+
+  .photo-wrap { position: relative; width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%; cursor: pointer; }
+  .photo {
+    width: 100%; height: 100%; border-radius: 50%; background: var(--sky-light); border: 3px solid var(--sky);
+    display: flex; align-items: center; justify-content: center; overflow: hidden; background-size: cover; background-position: center;
+  }
+  .photo span { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 22px; color: var(--sky); }
+  .photo.has-img span { display: none; }
+
+  .badge {
+    position: absolute; bottom: -2px; right: -2px; background: var(--sky); color: white; font-size: 10px; font-weight: 800;
+    width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid white;
+  }
+
+  .name { font-size: 13px; font-weight: 700; line-height: 1.3; margin: 0; color: var(--navy); }
+  .hint { font-size: 9px; color: #1E3A5F88; margin-top: 4px; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: #1E3A5F88; font-size: 13px; display: none; }
+  .empty-state.show { display: block; }
+
+  footer { text-align: center; font-size: 12px; color: #1E3A5F99; padding-bottom: 40px; max-width: 500px; margin: 0 auto; }
+
+  input[type="file"] { display: none; }
+
+  @media print {
+    header, .toolbar, .hint, footer { display: none; }
+    body { background: white; }
+    .card:hover { transform: none; box-shadow: 0 2px 8px rgba(30,58,95,0.08); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Album Kelas</p>
+  <h1>Direktori Kelas</h1>
+  <p class="sub">35 anggota kelas 8B Berkah Barokah — ketuk foto siapa aja buat pasang fotonya</p>
+</header>
+<svg class="wave" viewBox="0 0 1440 40" preserveAspectRatio="none"><path d="M0,20 C360,50 1080,-10 1440,20 L1440,0 L0,0 Z" fill="#1E3A5F"></path></svg>
+
+<div class="info-strip">
+  <div class="info-item"><div class="icon">🏫</div><p class="label">Nama Kelas</p><p class="value">8B Berkah Barokah</p></div>
+  <div class="info-item"><div class="icon">👩‍🏫</div><p class="label">Wali Kelas</p><p class="value">Ani Rokhani, S.Ag.</p></div>
+  <div class="info-item"><div class="icon">✨</div><p class="label">Motto</p><p class="value">Solid Selalu</p></div>
+  <div class="info-item"><div class="icon">👥</div><p class="label">Total Anggota</p><p class="value">35 Orang</p></div>
+</div>
+
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Cari nama teman..." />
+  </div>
+  <button class="btn" id="exportBtn">⬇️ Backup</button>
+  <button class="btn alt" id="importBtn">⬆️ Pulihkan</button>
+  <input type="file" id="importFile" accept="application/json" />
+</div>
+
+<main>
+  <p class="section-title">Anggota Kelas</p>
+  <div class="grid" id="grid"></div>
+  <p class="empty-state" id="emptyState">Nama tidak ditemukan ✦</p>
+</main>
+
+<footer>
+  Ketuk foto siapa pun buat pilih foto dari galeri HP kamu — pasangnya bebas, sesuai yang kamu mau. Foto tersimpan otomatis di HP ini. Sesekali ketuk "Backup" biar ada cadangannya, jaga-jaga kalau suatu saat hilang.
+</footer>
+
+<script>
+  const STUDENTS = [
+    "Akifatu Naila", "Annas Zulkar Naen", "Aqila Adiba", "Athiya Putri Ayu",
+    "Avika Nur Qomariah", "Dhava A Qayyin Al Najjrin", "Dita Raudhatul Jannah",
+    "Gerlin Sebastian", "Haidar Almairi", "Hanum Salsabila", "Iransyah Faturohman",
+    "Ivander Alvaro", "Kholidul Faizin", "Ma'ruf Ade Maulana", "Mirza Dzul Fahmi M",
+    "Mona Elice", "Mozaya Annaura Bintari", "Muhammad Aqil Wahid Abdurahman",
+    "Muhammad Zumar U", "Mutiyah", "Naufal Idzharul Huda", "Nawra Marsca",
+    "Nazma Bainun Lutfia", "Reza Shah Rosman", "Siti Maysaroh", "Siti Nurjihan",
+    "Saskia Qurotun Fadlilah", "Syahdu Amayra Dewi", "Syahnin Salsa Billah",
+    "Syifa Aizatulailia Putri", "Ulva Nuranggraeni", "Villenia Dana Diva",
+    "Wahyidin", "Wahyu", "Zahwa Nur Assyifa"
+  ];
+
+  function initials(name) {
+    return name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  }
+
+  const STORAGE_PREFIX = "direktori-kelas-foto-";
+  function savePhoto(no, dataUrl) {
+    try { localStorage.setItem(STORAGE_PREFIX + no, dataUrl); }
+    catch (err) { console.warn("Gagal simpan foto:", err); }
+  }
+  function loadPhoto(no) {
+    try { return localStorage.getItem(STORAGE_PREFIX + no); }
+    catch (err) { return null; }
+  }
+
+  const grid = document.getElementById("grid");
+  const emptyState = document.getElementById("emptyState");
+
+  STUDENTS.forEach((name, i) => {
+    const no = i + 1;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.name = name.toLowerCase();
+    card.innerHTML = `
+      <div class="photo-wrap">
+        <div class="photo" id="photo-${no}"><span>${initials(name)}</span></div>
+        <div class="badge">${no}</div>
+        <input type="file" accept="image/*" id="file-${no}" />
+      </div>
+      <p class="name">${name}</p>
+      <p class="hint">ketuk foto</p>
+    `;
+    const photoWrap = card.querySelector(".photo-wrap");
+    const fileInput = card.querySelector(`#file-${no}`);
+    const photoEl = card.querySelector(`#photo-${no}`);
+
+    photoWrap.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        photoEl.style.backgroundImage = `url(${ev.target.result})`;
+        photoEl.classList.add("has-img");
+        savePhoto(no, ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    grid.appendChild(card);
+
+    const saved = loadPhoto(no);
+    if (saved) {
+      photoEl.style.backgroundImage = `url(${saved})`;
+      photoEl.classList.add("has-img");
+    }
+  });
+
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    let visibleCount = 0;
+    document.querySelectorAll(".card").forEach((card) => {
+      const match = card.dataset.name.includes(q);
+      card.classList.toggle("hidden", !match);
+      if (match) visibleCount++;
+    });
+    emptyState.classList.toggle("show", visibleCount === 0);
+  });
+
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const data = {};
+    STUDENTS.forEach((name, i) => {
+      const no = i + 1;
+      const photo = loadPhoto(no);
+      if (photo) data[no] = photo;
+    });
+    if (Object.keys(data).length === 0) {
+      alert("Belum ada foto yang dipasang, jadi belum ada yang bisa dibackup.");
+      return;
+    }
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "backup-foto-kelas.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("importBtn").addEventListener("click", () => {
+    document.getElementById("importFile").click();
+  });
+
+  document.getElementById("importFile").addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        Object.keys(data).forEach((no) => {
+          savePhoto(no, data[no]);
+          const photoEl = document.getElementById(`photo-${no}`);
+          if (photoEl) {
+            photoEl.style.backgroundImage = `url(${data[no]})`;
+            photoEl.classList.add("has-img");
+          }
+        });
+        alert("Foto berhasil dipulihkan ✦");
+      } catch (err) {
+        alert("File backup tidak valid.");
+      }
+    };
+    reader.readAsText(file);
+  });
+</script>
+
+</body>
+</html>
