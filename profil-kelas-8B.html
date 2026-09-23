@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kelas 8B Berkah Barokah</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #05060f;
+    --bg2: #0a0e1f;
+    --glass: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+    --cyan: #22D3EE;
+    --purple: #A78BFA;
+    --pink: #F472B6;
+    --text: #E5E7EB;
+    --text-dim: #8B93A7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(34,211,238,0.08), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(167,139,250,0.08), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(244,114,182,0.06), transparent 40%),
+      linear-gradient(var(--bg), var(--bg2));
+    background-attachment: fixed;
+  }
+
+  .font-display { font-family: 'Orbitron', sans-serif; }
+
+  ::selection { background: var(--cyan); color: #000; }
+
+  /* ===== grid overlay pattern ===== */
+  .grid-overlay {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image:
+      linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at top, black, transparent 70%);
+  }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    background: rgba(5,6,15,0.75);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .topbar .logo {
+    font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.08em;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .menu-btn {
+    background: var(--glass); border: 1px solid var(--glass-border); color: var(--text);
+    width: 38px; height: 38px; border-radius: 10px; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== SLIDE MENU ===== */
+  .menu-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .menu-overlay.show { opacity: 1; pointer-events: auto; }
+  .menu-panel {
+    position: fixed; top: 0; right: 0; height: 100%; width: 78%; max-width: 300px; z-index: 91;
+    background: var(--bg2); border-left: 1px solid var(--glass-border);
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    padding: 20px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .menu-panel.show { transform: translateX(0); }
+  .menu-panel .close-btn {
+    align-self: flex-end; background: none; border: none; color: var(--text-dim); font-size: 20px; cursor: pointer; margin-bottom: 10px;
+  }
+  .menu-item {
+    display: flex; align-items: center; gap: 10px; padding: 13px 12px; border-radius: 10px;
+    color: var(--text); text-decoration: none; font-weight: 600; font-size: 15px; cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .menu-item:active, .menu-item:hover { background: var(--glass); border-color: var(--glass-border); }
+  .menu-item .ic { font-size: 17px; width: 20px; text-align: center; }
+  .menu-divider { height: 1px; background: var(--glass-border); margin: 10px 0; }
+  .menu-user {
+    font-size: 12px; color: var(--text-dim); padding: 0 12px 6px;
+  }
+
+  /* ===== HERO ===== */
+  .hero { position: relative; z-index: 1; padding: 42px 20px 30px; text-align: center; }
+  .hero .greet { font-size: 13px; color: var(--cyan); font-weight: 600; margin-bottom: 8px; letter-spacing: 0.05em; }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 26px; line-height: 1.3;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 30px rgba(34,211,238,0.25);
+  }
+  .hero p.sub { color: var(--text-dim); font-size: 14px; margin-top: 10px; max-width: 320px; margin-left: auto; margin-right: auto; }
+
+  .social-row { display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+  .social-btn {
+    display: flex; align-items: center; gap: 7px; padding: 10px 16px; border-radius: 999px;
+    background: var(--glass); border: 1px solid var(--glass-border); color: var(--text);
+    text-decoration: none; font-weight: 600; font-size: 13px; transition: border-color 0.2s, transform 0.15s;
+  }
+  .social-btn:active { transform: scale(0.96); }
+  .social-btn.ig:hover { border-color: var(--pink); box-shadow: 0 0 16px rgba(244,114,182,0.3); }
+  .social-btn.tt:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(34,211,238,0.3); }
+
+  /* ===== SECTIONS ===== */
+  section { position: relative; z-index: 1; padding: 34px 18px; max-width: 1000px; margin: 0 auto; }
+  .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .section-head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .section-head h2 { font-family: 'Orbitron', sans-serif; font-size: 15px; letter-spacing: 0.05em; color: var(--text); }
+  .section-head .line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--glass-border), transparent); }
+
+  /* ===== GLASS CARD ===== */
+  .glass {
+    background: var(--glass); border: 1px solid var(--glass-border); border-radius: 16px;
+    backdrop-filter: blur(8px);
+  }
+
+  /* ===== PIKET ===== */
+  .piket-card { padding: 22px; text-align: center; position: relative; overflow: hidden; }
+  .piket-card::before {
+    content: ""; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 200px; background: radial-gradient(circle, rgba(34,211,238,0.15), transparent 70%);
+  }
+  .piket-day { font-family: 'Orbitron', sans-serif; font-size: 20px; color: var(--cyan); position: relative; margin-bottom: 4px; }
+  .piket-date { font-size: 12px; color: var(--text-dim); margin-bottom: 16px; position: relative; }
+  .piket-names { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; position: relative; }
+  .piket-chip {
+    background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.3); color: var(--text);
+    padding: 6px 13px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  }
+  .piket-empty { color: var(--text-dim); font-size: 13px; position: relative; }
+
+  /* ===== GALLERY ===== */
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media (min-width: 560px) { .gallery-grid { grid-template-columns: repeat(4, 1fr); } }
+  .gallery-tile {
+    aspect-ratio: 1; border-radius: 12px; cursor: pointer; position: relative; overflow: hidden;
+    background-size: cover; background-position: center;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gallery-tile span { font-size: 22px; color: var(--text-dim); }
+  .gallery-tile input { display: none; }
+  .gallery-tile.has-img span { display: none; }
+
+  .gtile-actions {
+    position: absolute; top: 4px; right: 4px; display: flex; gap: 4px; z-index: 2;
+  }
+  .gtile-actions button {
+    width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(0,0,0,0.55); color: var(--text); font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gtile-actions button.danger:active { background: rgba(244,63,94,0.7); }
+
+  .gallery-caption {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 4px 6px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    font-size: 9px; color: var(--text); text-align: left;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .add-slot-btn {
+    aspect-ratio: 1; border-radius: 12px; border: 1px dashed var(--glass-border); background: transparent;
+    color: var(--text-dim); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .add-slot-btn:active { border-color: var(--cyan); color: var(--cyan); }
+
+  .lightbox-caption {
+    width: 100%; margin-top: 12px; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--glass-border);
+    background: rgba(255,255,255,0.04); color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 13px; outline: none;
+  }
+  .lightbox-caption:focus { border-color: var(--cyan); }
+  .lightbox-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .lightbox-actions button {
+    flex: 1; padding: 9px; border-radius: 9px; border: 1px solid var(--glass-border); background: var(--glass);
+    color: var(--text); font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
+  }
+  .lightbox-actions button.danger { border-color: rgba(244,63,94,0.4); color: #FCA5A5; }
+
+  /* ===== TOOLBAR / SEARCH ===== */
+  .search-wrap { position: relative; margin-bottom: 18px; }
+  .search-wrap input {
+    width: 100%; padding: 12px 14px 12px 38px; border-radius: 12px;
+    background: var(--glass); border: 1px solid var(--glass-border); color: var(--text);
+    font-family: 'Rajdhani', sans-serif; font-size: 14px; outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--cyan); }
+  .search-wrap input::placeholder { color: var(--text-dim); }
+  .search-wrap .icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 14px; }
+
+  /* ===== STUDENT GRID ===== */
+  .student-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 560px) { .student-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 820px) { .student-grid { grid-template-columns: repeat(5, 1fr); } }
+
+  .s-card {
+    padding: 16px 10px 12px; text-align: center; cursor: pointer; position: relative;
+    transition: border-color 0.15s;
+  }
+  .s-card:active { transform: scale(0.97); }
+  .s-card:hover { border-color: var(--accent, var(--cyan)); box-shadow: 0 0 8px -5px var(--accent, var(--cyan)); }
+  .s-card.hidden { display: none; }
+
+  .s-photo-wrap { position: relative; width: 72px; height: 72px; margin: 0 auto 9px; border-radius: 50%; cursor: pointer; }
+  .s-photo {
+    width: 100%; height: 100%; border-radius: 50%; background: rgba(255,255,255,0.06);
+    border: 2px solid var(--accent, var(--cyan)); display: flex; align-items: center; justify-content: center;
+    overflow: hidden; background-size: cover; background-position: center;
+    box-shadow: 0 0 4px -2px var(--accent, var(--cyan));
+  }
+  .s-photo span { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 18px; color: var(--accent, var(--cyan)); }
+  .s-photo.has-img span { display: none; }
+  .s-badge {
+    position: absolute; bottom: -2px; right: -2px; background: var(--accent, var(--cyan)); color: #05060f; font-size: 9px; font-weight: 800;
+    width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg);
+  }
+  .s-name { font-size: 12px; font-weight: 700; line-height: 1.25; color: var(--text); }
+  .s-hint { font-size: 8px; color: var(--text-dim); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .empty-state { text-align: center; padding: 30px 20px; color: var(--text-dim); font-size: 13px; display: none; }
+  .empty-state.show { display: block; }
+
+  /* ===== MODAL (student detail / lightbox / login) ===== */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 100;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+
+  .modal {
+    background: var(--bg2); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px 20px 20px;
+    width: 100%; max-width: 320px; text-align: center; position: relative;
+    opacity: 0;
+    transition: opacity 0.15s linear;
+    box-shadow: 0 0 40px -10px rgba(34,211,238,0.3);
+    max-height: 88vh; overflow-y: auto;
+  }
+  .overlay.show .modal { opacity: 1; }
+
+  .modal-close {
+    position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--glass); border: 1px solid var(--glass-border); color: var(--text); font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-photo {
+    width: 110px; height: 110px; border-radius: 50%; margin: 8px auto 12px; border: 3px solid var(--cyan);
+    background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center;
+    background-size: cover; background-position: center; overflow: hidden;
+    box-shadow: 0 0 6px -3px var(--cyan);
+  }
+  .modal-photo span { font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 30px; color: var(--cyan); }
+  .modal-photo.has-img span { display: none; }
+
+  .modal-name { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .modal-no { font-size: 11px; color: var(--text-dim); margin-bottom: 16px; }
+
+  .modal-field { text-align: left; margin-bottom: 10px; }
+  .modal-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: var(--text-dim); }
+  .modal-field input {
+    width: 100%; margin-top: 4px; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--glass-border);
+    font-family: 'Rajdhani', sans-serif; font-size: 13px; color: var(--text); outline: none; background: rgba(255,255,255,0.04);
+  }
+  .modal-field input:focus { border-color: var(--cyan); }
+
+  /* login modal specifics */
+  .login-list { max-height: 220px; overflow-y: auto; text-align: left; margin-top: 12px; }
+  .login-item {
+    padding: 10px 12px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text);
+  }
+  .login-item:hover, .login-item:active { background: var(--glass); }
+  .login-item.hidden { display: none; }
+
+  /* lightbox */
+  .lightbox-img { width: 100%; border-radius: 12px; max-height: 70vh; object-fit: contain; background: #000; }
+
+  input[type="file"] { display: none; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative; z-index: 1; text-align: center; padding: 30px 20px 46px; color: var(--text-dim); font-size: 12px;
+  }
+  footer .credit { font-family: 'Orbitron', sans-serif; font-size: 11px; color: var(--purple); margin-bottom: 6px; letter-spacing: 0.05em; }
+  footer p { margin: 3px 0; }
+</style>
+</head>
+<body>
+
+<div class="grid-overlay"></div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span class="logo">8B · BERKAH BAROKAH</span>
+  <button class="menu-btn" id="menuBtn">⋮</button>
+</div>
+
+<!-- SLIDE MENU -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-panel" id="menuPanel">
+    <button class="close-btn" id="menuCloseBtn">✕</button>
+    <p class="menu-user" id="menuUser"></p>
+    <a class="menu-item" data-target="hero"><span class="ic">🏠</span> Beranda</a>
+    <a class="menu-item" data-target="piket"><span class="ic">🗓️</span> Jadwal Piket</a>
+    <a class="menu-item" data-target="galeri"><span class="ic">🖼️</span> Galeri Momen</a>
+    <a class="menu-item" data-target="siswa"><span class="ic">👥</span> Daftar Siswa</a>
+    <div class="menu-divider"></div>
+    <a class="menu-item" id="menuLogout"><span class="ic">🔄</span> Ganti Akun</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <p class="greet" id="greetText">Selamat datang ✦</p>
+  <h1 class="font-display">KELAS 8B<br>BERKAH BAROKAH</h1>
+  <p class="sub">Ruang digital kelas kita — foto, momen, jadwal piket, semuanya di sini.</p>
+  <div class="social-row">
+    <a class="social-btn ig" href="https://www.instagram.com/class_eightbrave8b">📸 Instagram</a>
+    <a class="social-btn tt" href="https://www.tiktok.com/@vaaaieeeenzxx">🎵 TikTok</a>
+  </div>
+</section>
+
+<!-- PIKET -->
+<section id="piket">
+  <div class="section-head"><span class="dot"></span><h2 class="font-display">JADWAL PIKET</h2><span class="line"></span></div>
+  <div class="glass piket-card">
+    <p class="piket-day font-display" id="piketDay"></p>
+    <p class="piket-date" id="piketDate"></p>
+    <div class="piket-names" id="piketNames"></div>
+  </div>
+</section>
+
+<!-- GALERI -->
+<section id="galeri">
+  <div class="section-head"><span class="dot"></span><h2 class="font-display">GALERI MOMEN</h2><span class="line"></span></div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<!-- SISWA -->
+<section id="siswa">
+  <div class="section-head"><span class="dot"></span><h2 class="font-display">DAFTAR SISWA</h2><span class="line"></span></div>
+  <div class="search-wrap">
+    <span class="icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Cari nama teman..." />
+  </div>
+  <div class="student-grid" id="studentGrid"></div>
+  <p class="empty-state" id="emptyState">Nama tidak ditemukan ✦</p>
+</section>
+
+<footer>
+  <p class="credit font-display">◆ SISTEM KELAS 8B ◆</p>
+  <p>Dibuat oleh <strong>Naufal</strong></p>
+  <p>Wali Kelas: <strong>Ani Rokhani, S.Ag.</strong></p>
+</footer>
+
+<!-- STUDENT MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-photo" id="modalPhoto"><span id="modalInitials"></span></div>
+    <p class="modal-name font-display" id="modalName"></p>
+    <p class="modal-no" id="modalNo"></p>
+    <div class="modal-field"><label>Julukan</label><input type="text" id="modalNickname" placeholder="misal: Si Rajin..." /></div>
+    <div class="modal-field"><label>Hobi</label><input type="text" id="modalHobi" placeholder="tulis hobinya..." /></div>
+    <div class="modal-field"><label>Cita-cita</label><input type="text" id="modalCita" placeholder="tulis cita-citanya..." /></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX MODAL -->
+<div class="overlay" id="lightboxOverlay">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" id="lightboxClose">✕</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Momen kelas" />
+    <input type="text" class="lightbox-caption" id="lightboxCaption" placeholder="Tulis keterangan momen ini..." />
+    <div class="lightbox-actions">
+      <button id="lightboxReplace">🔄 Ganti Foto</button>
+      <button class="danger" id="lightboxDelete">🗑️ Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <p class="modal-name font-display" style="margin-top:6px;">SIAPA KAMU?</p>
+    <p class="modal-no">Pilih namamu buat masuk</p>
+    <div class="search-wrap"><span class="icon">🔍</span><input type="text" id="loginSearch" placeholder="Cari namamu..." /></div>
+    <div class="login-list" id="loginList"></div>
+  </div>
+</div>
+
+<script>
+  const STUDENTS = [
+    "Akifatu Naila", "Annas Zulkar Naen", "Aqila Adiba", "Athiya Putri Ayu",
+    "Avika Nur Qomariah", "Dhava A Qayyin Al Najjrin", "Dita Raudhatul Jannah",
+    "Gerlin Sebastian", "Haidar Almairi", "Hanum Salsabila", "Iransyah Faturohman",
+    "Ivander Alvaro", "Kholidul Faizin", "Ma'ruf Ade Maulana", "Mirza Dzul Fahmi M",
+    "Mona Elice", "Mozaya Annaura Bintari", "Muhammad Aqil Wahid Abdurahman",
+    "Muhammad Zumar U", "Mutiyah", "Naufal Idzharul Huda", "Nawra Marsca",
+    "Nazma Bainun Lutfia", "Reza Shah Rosman", "Siti Maysaroh", "Siti Nurjihan",
+    "Saskia Qurotun Fadlilah", "Syahdu Amayra Dewi", "Syahnin Salsa Billah",
+    "Syifa Aizatulailia Putri", "Ulva Nuranggraeni", "Villenia Dana Diva",
+    "Wahyidin", "Wahyu", "Zahwa Nur Assyifa"
+  ];
+
+  const PIKET = {
+    1: ["Anas","Ivander","Naufal","Aqila","Mona","Saskia","Syifa"],
+    2: ["Dava'a","Faiz","Reza","Athia","Moza","Siti Maysaroh","Ulva"],
+    3: ["Gerlind","Mirza","Wahyidin","Avika","Muthia","Siti Nurjihan","Vilenia"],
+    4: ["Haidar","Aqil","Wahyu","Dita","Naura","Syahdu","Zahwa"],
+    5: ["Iran","Zumar","Ma'ruf","Akifatu Naila","Hanum","Nazwa","Syahnin"]
+  };
+  const DAY_NAMES = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  const ACCENTS = ["#22D3EE", "#A78BFA", "#F472B6", "#34D399", "#FBBF24"];
+
+  function initials(name) { return name.split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase(); }
+
+  /* ---------- storage helpers ---------- */
+  function safeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function safeSet(key, val) { try { localStorage.setItem(key, val); } catch (e) { console.warn("storage gagal", e); } }
+
+  const PHOTO_PREFIX = "kelas8b-foto-";
+  const INFO_PREFIX = "kelas8b-info-";
+  const GALLERY_PREFIX = "kelas8b-galeri-";
+  const LOGIN_KEY = "kelas8b-login";
+
+  function savePhoto(no, dataUrl) { safeSet(PHOTO_PREFIX + no, dataUrl); }
+  function loadPhoto(no) { return safeGet(PHOTO_PREFIX + no); }
+  function saveInfo(no, field, value) {
+    const key = INFO_PREFIX + no;
+    let current = {};
+    try { current = JSON.parse(safeGet(key) || "{}"); } catch (e) {}
+    current[field] = value;
+    safeSet(key, JSON.stringify(current));
+  }
+  function loadInfo(no) { try { return JSON.parse(safeGet(INFO_PREFIX + no) || "{}"); } catch (e) { return {}; } }
+
+  /* ---------- PIKET ---------- */
+  function renderPiket() {
+    const now = new Date();
+    const dayIdx = now.getDay();
+    document.getElementById("piketDay").textContent = DAY_NAMES[dayIdx];
+    document.getElementById("piketDate").textContent = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    const list = PIKET[dayIdx];
+    const namesEl = document.getElementById("piketNames");
+    namesEl.innerHTML = "";
+    if (list) {
+      list.forEach(n => {
+        const chip = document.createElement("span");
+        chip.className = "piket-chip";
+        chip.textContent = n;
+        namesEl.appendChild(chip);
+      });
+    } else {
+      namesEl.innerHTML = '<p class="piket-empty">Nggak ada piket hari ini — libur ✦</p>';
+    }
+  }
+  renderPiket();
+
+  /* ---------- GALLERY ---------- */
+  const GALLERY_COUNT_KEY = "kelas8b-galeri-count";
+  const GALLERY_CAPTION_PREFIX = "kelas8b-galeri-caption-";
+  let gallerySlots = parseInt(safeGet(GALLERY_COUNT_KEY) || "8", 10);
+  const galleryGrid = document.getElementById("galleryGrid");
+
+  function renderGalleryTile(i) {
+    const tile = document.createElement("div");
+    tile.className = "glass gallery-tile";
+    tile.id = `gtile-${i}`;
+    tile.innerHTML = `
+      <span>+</span>
+      <input type="file" accept="image/*" id="gfile-${i}" />
+      <div class="gtile-actions" id="gactions-${i}" style="display:none;">
+        <button data-role="edit" title="Ganti">✏️</button>
+        <button data-role="delete" class="danger" title="Hapus">🗑️</button>
+      </div>
+      <div class="gallery-caption" id="gcap-${i}" style="display:none;"></div>
+    `;
+    galleryGrid.appendChild(tile);
+
+    const fileInput = tile.querySelector(`#gfile-${i}`);
+    const actions = tile.querySelector(`#gactions-${i}`);
+    const capEl = tile.querySelector(`#gcap-${i}`);
+
+    function refreshTile() {
+      const saved = safeGet(GALLERY_PREFIX + i);
+      const caption = safeGet(GALLERY_CAPTION_PREFIX + i) || "";
+      if (saved) {
+        tile.style.backgroundImage = `url(${saved})`;
+        tile.classList.add("has-img");
+        actions.style.display = "flex";
+        if (caption) { capEl.textContent = caption; capEl.style.display = "block"; }
+        else { capEl.style.display = "none"; }
+      } else {
+        tile.style.backgroundImage = "none";
+        tile.classList.remove("has-img");
+        actions.style.display = "none";
+        capEl.style.display = "none";
+      }
+    }
+    refreshTile();
+
+    tile.addEventListener("click", () => {
+      if (tile.classList.contains("has-img")) openLightbox(i);
+      else fileInput.click();
+    });
+    actions.querySelector('[data-role="edit"]').addEventListener("click", (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+    actions.querySelector('[data-role="delete"]').addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (confirm("Hapus foto ini dari galeri?")) {
+        localStorage.removeItem(GALLERY_PREFIX + i);
+        localStorage.removeItem(GALLERY_CAPTION_PREFIX + i);
+        refreshTile();
+      }
+    });
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        safeSet(GALLERY_PREFIX + i, ev.target.result);
+        refreshTile();
+      };
+      reader.readAsDataURL(file);
+      fileInput.value = "";
+    });
+
+    tile._refresh = refreshTile;
+  }
+
+  function renderAddSlotButton() {
+    const existing = document.getElementById("addSlotBtn");
+    if (existing) existing.remove();
+    const btn = document.createElement("button");
+    btn.id = "addSlotBtn";
+    btn.className = "add-slot-btn";
+    btn.textContent = "+";
+    btn.title = "Tambah slot momen";
+    btn.addEventListener("click", () => {
+      gallerySlots++;
+      safeSet(GALLERY_COUNT_KEY, String(gallerySlots));
+      btn.remove();
+      renderGalleryTile(gallerySlots);
+      renderAddSlotButton();
+    });
+    galleryGrid.appendChild(btn);
+  }
+
+  for (let i = 1; i <= gallerySlots; i++) renderGalleryTile(i);
+  renderAddSlotButton();
+
+  const lightboxOverlay = document.getElementById("lightboxOverlay");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxCaption = document.getElementById("lightboxCaption");
+  let currentGalleryNo = null;
+
+  function openLightbox(no) {
+    currentGalleryNo = no;
+    lightboxImg.src = safeGet(GALLERY_PREFIX + no);
+    lightboxCaption.value = safeGet(GALLERY_CAPTION_PREFIX + no) || "";
+    lightboxOverlay.classList.add("show");
+  }
+  document.getElementById("lightboxClose").addEventListener("click", () => lightboxOverlay.classList.remove("show"));
+  lightboxOverlay.addEventListener("click", (e) => { if (e.target === lightboxOverlay) lightboxOverlay.classList.remove("show"); });
+
+  lightboxCaption.addEventListener("input", () => {
+    if (currentGalleryNo) {
+      safeSet(GALLERY_CAPTION_PREFIX + currentGalleryNo, lightboxCaption.value);
+      const tile = document.getElementById(`gtile-${currentGalleryNo}`);
+      if (tile && tile._refresh) tile._refresh();
+    }
+  });
+
+  document.getElementById("lightboxReplace").addEventListener("click", () => {
+    if (!currentGalleryNo) return;
+    const fileInput = document.getElementById(`gfile-${currentGalleryNo}`);
+    fileInput.click();
+    fileInput.addEventListener("change", () => {
+      setTimeout(() => { lightboxImg.src = safeGet(GALLERY_PREFIX + currentGalleryNo); }, 100);
+    }, { once: true });
+  });
+
+  document.getElementById("lightboxDelete").addEventListener("click", () => {
+    if (!currentGalleryNo) return;
+    if (confirm("Hapus foto ini dari galeri?")) {
+      localStorage.removeItem(GALLERY_PREFIX + currentGalleryNo);
+      localStorage.removeItem(GALLERY_CAPTION_PREFIX + currentGalleryNo);
+      const tile = document.getElementById(`gtile-${currentGalleryNo}`);
+      if (tile && tile._refresh) tile._refresh();
+      lightboxOverlay.classList.remove("show");
+    }
+  });
+
+  /* ---------- STUDENT GRID ---------- */
+  const grid = document.getElementById("studentGrid");
+  const emptyState = document.getElementById("emptyState");
+
+  STUDENTS.forEach((name, i) => {
+    const no = i + 1;
+    const card = document.createElement("div");
+    card.className = "glass s-card";
+    card.dataset.name = name.toLowerCase();
+    card.style.setProperty("--accent", ACCENTS[i % ACCENTS.length]);
+    card.innerHTML = `
+      <div class="s-photo-wrap">
+        <div class="s-photo" id="sphoto-${no}"><span>${initials(name)}</span></div>
+        <div class="s-badge">${no}</div>
+        <input type="file" accept="image/*" id="sfile-${no}" />
+      </div>
+      <p class="s-name">${name}</p>
+      <p class="s-hint">ketuk foto</p>
+    `;
+    const photoWrap = card.querySelector(".s-photo-wrap");
+    const fileInput = card.querySelector(`#sfile-${no}`);
+    const photoEl = card.querySelector(`#sphoto-${no}`);
+
+    photoWrap.addEventListener("click", (e) => { e.stopPropagation(); fileInput.click(); });
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        photoEl.style.backgroundImage = `url(${ev.target.result})`;
+        photoEl.classList.add("has-img");
+        savePhoto(no, ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    card.addEventListener("click", () => openStudentModal(no, name));
+    grid.appendChild(card);
+
+    const saved = loadPhoto(no);
+    if (saved) { photoEl.style.backgroundImage = `url(${saved})`; photoEl.classList.add("has-img"); }
+  });
+
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    let visible = 0;
+    document.querySelectorAll(".s-card").forEach(card => {
+      const match = card.dataset.name.includes(q);
+      card.classList.toggle("hidden", !match);
+      if (match) visible++;
+    });
+    emptyState.classList.toggle("show", visible === 0);
+  });
+
+  /* ---------- STUDENT MODAL ---------- */
+  const overlay = document.getElementById("overlay");
+  const modalPhoto = document.getElementById("modalPhoto");
+  const modalInitials = document.getElementById("modalInitials");
+  const modalName = document.getElementById("modalName");
+  const modalNo = document.getElementById("modalNo");
+  const modalNickname = document.getElementById("modalNickname");
+  const modalHobi = document.getElementById("modalHobi");
+  const modalCita = document.getElementById("modalCita");
+  let currentNo = null;
+
+  function openStudentModal(no, name) {
+    currentNo = no;
+    modalName.textContent = name;
+    modalNo.textContent = `Absen No. ${no}`;
+    modalInitials.textContent = initials(name);
+    const photo = loadPhoto(no);
+    if (photo) { modalPhoto.style.backgroundImage = `url(${photo})`; modalPhoto.classList.add("has-img"); }
+    else { modalPhoto.style.backgroundImage = "none"; modalPhoto.classList.remove("has-img"); }
+    const info = loadInfo(no);
+    modalNickname.value = info.nickname || "";
+    modalHobi.value = info.hobi || "";
+    modalCita.value = info.cita || "";
+    overlay.classList.add("show");
+  }
+  document.getElementById("modalClose").addEventListener("click", () => overlay.classList.remove("show"));
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.classList.remove("show"); });
+  modalNickname.addEventListener("input", () => currentNo && saveInfo(currentNo, "nickname", modalNickname.value));
+  modalHobi.addEventListener("input", () => currentNo && saveInfo(currentNo, "hobi", modalHobi.value));
+  modalCita.addEventListener("input", () => currentNo && saveInfo(currentNo, "cita", modalCita.value));
+
+  /* ---------- MENU ---------- */
+  const menuBtn = document.getElementById("menuBtn");
+  const menuOverlay = document.getElementById("menuOverlay");
+  const menuPanel = document.getElementById("menuPanel");
+  function openMenu() { menuOverlay.classList.add("show"); menuPanel.classList.add("show"); }
+  function closeMenu() { menuOverlay.classList.remove("show"); menuPanel.classList.remove("show"); }
+  menuBtn.addEventListener("click", openMenu);
+  document.getElementById("menuCloseBtn").addEventListener("click", closeMenu);
+  menuOverlay.addEventListener("click", (e) => { if (e.target === menuOverlay) closeMenu(); });
+  document.querySelectorAll(".menu-item[data-target]").forEach(item => {
+    item.addEventListener("click", () => {
+      closeMenu();
+      const el = document.getElementById(item.dataset.target);
+      if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
+    });
+  });
+
+  /* ---------- LOGIN ---------- */
+  const loginOverlay = document.getElementById("loginOverlay");
+  const loginList = document.getElementById("loginList");
+  const loginSearch = document.getElementById("loginSearch");
+  const greetText = document.getElementById("greetText");
+  const menuUser = document.getElementById("menuUser");
+
+  STUDENTS.forEach(name => {
+    const item = document.createElement("div");
+    item.className = "login-item";
+    item.textContent = name;
+    item.dataset.name = name.toLowerCase();
+    item.addEventListener("click", () => {
+      safeSet(LOGIN_KEY, name);
+      loginOverlay.classList.remove("show");
+      applyLogin(name);
+    });
+    loginList.appendChild(item);
+  });
+  loginSearch.addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    loginList.querySelectorAll(".login-item").forEach(item => {
+      item.classList.toggle("hidden", !item.dataset.name.includes(q));
+    });
+  });
+
+  function applyLogin(name) {
+    greetText.textContent = `Halo, ${name.split(" ")[0]} 👋`;
+    menuUser.textContent = `Masuk sebagai ${name}`;
+  }
+
+  document.getElementById("menuLogout").addEventListener("click", () => {
+    safeSet(LOGIN_KEY, "");
+    closeMenu();
+    setTimeout(() => loginOverlay.classList.add("show"), 250);
+  });
+
+  const existingUser = safeGet(LOGIN_KEY);
+  if (existingUser) { applyLogin(existingUser); }
+  else { loginOverlay.classList.add("show"); }
+
+  /* ---------- pengecekan berkala tiap menit (biar tetap ringan & piket update otomatis) ---------- */
+  setInterval(() => {
+    renderPiket();
+  }, 60000);
+</script>
+
+</body>
+</html>
